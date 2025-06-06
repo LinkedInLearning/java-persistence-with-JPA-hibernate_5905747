@@ -3,16 +3,50 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
     <!-- Define Persistence Unit -->
+    <!--
+    This file represents a typical persistence.xml file for a Jakarta EE application
+    using Hibernate as the JPA provider and MariaDB as the database.
+    The persistence unit is named "library_persistence_unit" and is configured for
+    local transactions (RESOURCE_LOCAL).
+    The database connection properties are set for a MariaDB instance running on localhost
+    with the database name "library", user "root", and password "mariadb".
+    The Hibernate provider is specified, and the SQL statements will be shown in the console.
+    The hbm2ddl.auto property is set to "create", which means the database schema will be
+    created each time the application starts. This is suitable for development but should
+    be changed to "validate" or "none" in production environments to avoid data loss. 
+    -->
     <persistence-unit name="library_persistence_unit" transaction-type="RESOURCE_LOCAL">
+        <!-- Specifies the JPA provider to use, in this case, Hibernate. -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <properties>
+            <!-- Defines the database driver to use. -->
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver" />
+
+            <!-- Defines the database connection string or URL.-->
             <property name="jakarta.persistence.jdbc.url"
                 value="jdbc:mariadb://localhost:3306/library" />
+
+            <!-- Defines the username and password for the database connection. -->
             <property name="jakarta.persistence.jdbc.user" value="root" />
             <property name="jakarta.persistence.jdbc.password" value="mariadb" />
+
+            <!-- 
+            Allows hubernate to print the executed SQL statement to the console.
+            This is fine for development and debugging purposes, but it should
+            be turned off in production to avoid performance issues and security risks.
+            -->
             <property name="hibernate.show_sql" value="true" />
+
+            <!-- 
+            Specifies hibernate to create the database schema on startup.
+            This is useful for development, as it ensures the database schema is always
+            in sync with the entity classes. However, it will drop and recreate the schema
+            each time the application starts, which means all data will be lost.
+            For production, this should be set to "validate" or "none" to avoid data loss.
+            Uncomment the line below to enable schema creation.
+            -->
+            <!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
         </properties>
     </persistence-unit>
 </persistence>

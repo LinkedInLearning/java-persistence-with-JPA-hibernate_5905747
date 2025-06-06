@@ -4,24 +4,49 @@ CREATE DATABASE IF NOT EXISTS library;
 -- Use the database
 USE library;
 -- Crate tables in the database
-CREATE TABLE IF NOT EXISTS book(
-  book_id INT AUTO_INCREMENT PRIMARY KEY,
-  book_name VARCHAR(255),
-  isbn VARCHAR(255)
-);
-CREATE TABLE IF NOT EXISTS author(
-  author_id INT AUTO_INCREMENT PRIMARY KEY,
-  author_name VARCHAR(255)
-);
-CREATE TABLE IF NOT EXISTS book_type(
-  type_code VARCHAR(255),
-  type_subcode VARCHAR(255),
-  type_name VARCHAR(255),
-  PRIMARY KEY(type_code, type_subcode)
-);
-CREATE TABLE IF NOT EXISTS item(
-  item_code VARCHAR(255),
-  item_number INT,
-  item_name VARCHAR(255),
-  PRIMARY KEY(item_code, item_number)
-);
+-- CREATE TABLE IF NOT EXISTS book(
+--   book_id INT AUTO_INCREMENT PRIMARY KEY,
+--   book_name VARCHAR(255),
+--   isbn VARCHAR(255),
+--   author_id INT
+-- );
+-- CREATE TABLE IF NOT EXISTS author(
+--   author_id INT AUTO_INCREMENT PRIMARY KEY,
+--   author_name VARCHAR(255)
+-- );
+-- CREATE TABLE IF NOT EXISTS book_type(
+--   type_code VARCHAR(255),
+--   type_subcode VARCHAR(255),
+--   type_name VARCHAR(255),
+--   PRIMARY KEY(type_code, type_subcode)
+-- );
+-- CREATE TABLE IF NOT EXISTS item(
+--   item_code VARCHAR(255),
+--   item_number INT,
+--   item_name VARCHAR(255),
+--   PRIMARY KEY(item_code, item_number)
+-- );
+-- CREATE TABLE IF NOT EXISTS review(
+--   review_id INT AUTO_INCREMENT PRIMARY KEY,
+--   comment VARCHAR(255),
+--   book_id INT
+-- );
+-- CREATE TABLE IF NOT EXISTS user(
+--   user_id INT AUTO_INCREMENT PRIMARY KEY,
+--   user_name VARCHAR(255)
+-- );
+-- CREATE TABLE IF NOT EXISTS grp(
+--   group_id INT AUTO_INCREMENT PRIMARY KEY,
+--   group_name VARCHAR(255)
+-- );
+-- CREATE TABLE IF NOT EXISTS user_group(
+--   user_id INT,
+--   group_id INT,
+--   FOREIGN KEY (user_id) REFERENCES user(user_id),
+--   FOREIGN KEY (group_id) REFERENCES grp(group_id)
+-- );
+-- Add foreign keys to the tables
+-- ALTER TABLE IF EXISTS book
+-- ADD CONSTRAINT fk_author_id FOREIGN KEY (author_id) REFERENCES author(author_id);
+-- ALTER TABLE IF EXISTS review
+-- ADD CONSTRAINT fk_book_id FOREIGN KEY (book_id) REFERENCES book(book_id);

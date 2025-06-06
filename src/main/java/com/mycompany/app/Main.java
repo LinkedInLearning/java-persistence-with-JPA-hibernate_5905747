@@ -1,8 +1,26 @@
 package com.mycompany.app;
 
+import java.util.List;
+import java.util.Set;
+
+import com.mycompany.app.entities.Address;
+import com.mycompany.app.entities.Author;
 import com.mycompany.app.entities.Book;
 import com.mycompany.app.entities.BookType;
+import com.mycompany.app.entities.CardPayment;
+import com.mycompany.app.entities.CashPayment;
+import com.mycompany.app.entities.Category;
+import com.mycompany.app.entities.Fiction;
+import com.mycompany.app.entities.Field;
+import com.mycompany.app.entities.Group;
 import com.mycompany.app.entities.Item;
+import com.mycompany.app.entities.NonFiction;
+import com.mycompany.app.entities.Review;
+import com.mycompany.app.entities.Student;
+import com.mycompany.app.entities.Student2;
+import com.mycompany.app.entities.Teacher;
+import com.mycompany.app.entities.Teacher2;
+import com.mycompany.app.entities.User;
 import com.mycompany.app.entities.keys.ItemKey;
 
 import jakarta.persistence.EntityManager;
@@ -197,19 +215,64 @@ import jakarta.persistence.Persistence;
 
 public class Main {
   public static void main(String[] args) {
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("library_persistence_unit");
 
-    // Uncomment the method calls below to test different functionalities
-    // createInstance(emf);
-    // createMultipleInstances(emf);
-    // findAndUpdateInstance(emf);
-    // detachAndReattachInstance(emf);
-    // removeInstance(emf);
-    // useGetReference(emf);
-    // useRefreah(emf);
-    // createEntityWithCompositeKey(emf);
+    try (EntityManagerFactory emf = Persistence.createEntityManagerFactory("library_persistence_unit")) {
+      // Uncomment the method calls below to test different functionalities
+      // createInstance(emf);
+      // createMultipleInstances(emf);
+      // findAndUpdateInstance(emf);
+      // detachAndReattachInstance(emf);
+      // removeInstance(emf);
+      // useGetReference(emf);
+      // useRefreah(emf);
+      // createEntityWithCompositeKey(emf);
+      // createOneToOneRelationship(emf);
+      // createOneToManyRelationship(emf);
+      // createManyToManyRelationship(emf);
+      // mappedSuperclassStrategy(emf);
+      // singleTableStrategy(emf);
+      // joinedTableStrategy(emf);
+      // tablePerClassStrategy(emf);
+      // compositionWithAssociation(emf);
+      // compositionWithEmbedable(emf);
+    }
+  }
 
-    emf.close();
+  /**
+   * This method creates a single instance of the Book entity and persists it
+   * to the database.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method demonstrates how to create and persist a single Book entity.
+  // It creates a Book instance with a name and ISBN, persists it to the database,
+  // and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entity is saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the creation and persistence of a Book entity in a JPA context.
+  // It is a basic example of how to use JPA to create and persist entities in a
+  // relational database using Hibernate as the JPA provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void createInstance(EntityManagerFactory emf) {
+    EntityManager em = emf.createEntityManager();
+
+    try {
+      em.getTransaction().begin();
+
+      Book book = new Book();
+      book.setName("my book");
+      book.setIsbn("123-4567890123");
+      em.persist(book);
+      System.out.println(book);
+
+      em.getTransaction().commit();
+    } finally {
+      em.close();
+    }
   }
 
   /**
@@ -245,43 +308,6 @@ public class Main {
         em.persist(book);
       }
       em.flush(); // Ensure the entities are persisted before committing
-      em.getTransaction().commit();
-    } finally {
-      em.close();
-    }
-  }
-
-  /**
-   * This method creates a single instance of the Book entity and persists it
-   * to the database.
-   *
-   * @param emf The EntityManagerFactory used to create EntityManager instances.
-   */
-  // This method demonstrates how to create and persist a single Book entity.
-  // It creates a Book instance with a name and ISBN, persists it to the database,
-  // and commits the transaction.
-  // The method uses the EntityManager to manage the persistence context and
-  // ensure that the entity is saved to the database.
-  // The method is designed to be called from the main method to demonstrate
-  // the creation and persistence of a Book entity in a JPA context. 
-  // It is a basic example of how to use JPA to create and persist entities in a
-  // relational database using Hibernate as the JPA provider.
-  // The method is annotated with @SuppressWarnings("unused") to indicate that it
-  // is intentionally not used in the current context, but it can be uncommented
-  // in the main method to execute it and see the results.
-  @SuppressWarnings("unused")
-  private static void createInstance(EntityManagerFactory emf) {
-    EntityManager em = emf.createEntityManager();
-
-    try {
-      em.getTransaction().begin();
-
-      Book book = new Book();
-      book.setName("my book");
-      book.setIsbn("123-4567890123");
-      em.persist(book);
-      System.out.println(book);
-
       em.getTransaction().commit();
     } finally {
       em.close();
@@ -545,6 +571,438 @@ public class Main {
       em.getTransaction().commit();
     } finally {
       em.close();
+    }
+  }
+
+  /**
+   * This method demonstrates how to create a one-to-one relationship
+   * between the Book and Author
+   * entities and persists them to the database.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates a Book instance and an Author instance,
+  // sets the relationship between them, persists both entities to the
+  // database, and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the creation of a one-to-one relationship in a JPA context.
+  // It is a basic example of how to use JPA to create and persist entities with
+  // a one-to-one relationship in a relational database using Hibernate as the JPA
+  // provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void createOneToOneRelationship(EntityManagerFactory emf) {
+
+    try (EntityManager em = emf.createEntityManager()) {
+      em.getTransaction().begin();
+
+      Book book = new Book();
+      book.setName("another one of my books");
+      book.setIsbn("623-4567890123");
+
+      Author author = new Author();
+      author.setName("John Doe");
+
+      book.setAuthor(author);
+
+      em.persist(book);
+      em.persist(author);
+
+      em.getTransaction().commit();
+    }
+  }
+
+  /**
+   * This method demonstrates how to create a one-to-many relationship
+   * between the Book and Review entities and persists them to the database.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates a Book instance and two Review instances,
+  // sets the relationship between them, persists both entities to the
+  // database, and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the creation of a one-to-many relationship in a JPA context.
+  // It is a basic example of how to use JPA to create and persist entities with
+  // a one-to-many relationship in a relational database using Hibernate as the
+  // JPA
+  // provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void createOneToManyRelationship(EntityManagerFactory emf) {
+    Book book = new Book();
+    book.setName("Book with Authors");
+    book.setIsbn("123-4567890123");
+
+    Review review1 = new Review();
+    review1.setComment("Great book!");
+    review1.setBook(book);
+
+    Review review2 = new Review();
+    review2.setComment("Very informative.");
+    review2.setBook(book);
+
+    book.setReviews(List.of(review1, review2));
+
+    try (EntityManager em = emf.createEntityManager()) {
+      Author author = em.find(Author.class, 1);
+      book.setAuthor(author);
+
+      em.getTransaction().begin();
+
+      em.persist(book);
+
+      em.getTransaction().commit();
+    }
+  }
+
+  /**
+   * This method demonstrates how to create a many-to-many relationship
+   * between the Group and User entities and persists them to the database.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates a Group instance and two User instances,
+  // sets the relationship between them, persists both entities to the
+  // database, and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the creation of a many-to-many relationship in a JPA context.
+  // It is a basic example of how to use JPA to create and persist entities with
+  // a many-to-many relationship in a relational database using Hibernate as the
+  // JPA
+  // provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void createManyToManyRelationship(EntityManagerFactory emf) {
+    try (EntityManager em = emf.createEntityManager()) {
+      em.getTransaction().begin();
+
+      User user1 = new User();
+      user1.setName("Alice");
+
+      User user2 = new User();
+      user2.setName("Bob");
+
+      Group group1 = new Group();
+      group1.setName("Developers");
+
+      Group group2 = new Group();
+      group2.setName("Designers");
+
+      group1.setUsers(List.of(user1, user2));
+      group2.setUsers(List.of(user1));
+
+      em.persist(group1);
+      em.persist(group2);
+
+      em.getTransaction().commit();
+    }
+  }
+
+  /**
+   * This method demonstrates how to use the mapped superclass strategy
+   * to create entities that share common attributes.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates instances of Student and Teacher entities,
+  // which inherit common attributes from a mapped superclass.
+  // It sets specific attributes for each entity, persists them to the
+  // database, and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the use of mapped superclass strategy in a JPA context.
+  // It is a basic example of how to use JPA to create and persist entities that
+  // share common attributes in a relational database using Hibernate as the JPA
+  // provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void mappedSuperclassStrategy(EntityManagerFactory emf) {
+    try (EntityManager em = emf.createEntityManager()) {
+      em.getTransaction().begin();
+
+      Student student = new Student();
+      student.setName("John Doe");
+      student.setStudentCode("S12345");
+
+      Teacher teacher = new Teacher();
+      teacher.setName("Jane Smith");
+      teacher.setTeacherCode("T67890");
+
+      em.persist(student);
+      em.persist(teacher);
+
+      em.getTransaction().commit();
+    }
+  }
+
+  /**
+   * This method demonstrates how to use the single table inheritance strategy
+   * to create entities that share a single table in the database.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates instances of Student2 and Teacher2 entities,
+  // which inherit common attributes from a base class Member2 and are stored
+  // in a single table in the database using the single table inheritance
+  // strategy.
+  // It sets specific attributes for each entity, persists them to the
+  // database, and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the use of single table inheritance strategy in a JPA context.
+  // It is a basic example of how to use JPA to create and persist entities that
+  // share a single table in a relational database using Hibernate as the JPA
+  // provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void singleTableStrategy(EntityManagerFactory emf) {
+    try (EntityManager em = emf.createEntityManager()) {
+      em.getTransaction().begin();
+
+      Student2 student = new Student2();
+      student.setName("John Doe");
+      student.setStudentCode("S12345");
+
+      Teacher2 teacher = new Teacher2();
+      teacher.setName("Jane Smith");
+      teacher.setTeacherCode("T67890");
+
+      em.persist(student);
+      em.persist(teacher);
+
+      em.getTransaction().commit();
+    }
+  }
+
+  /**
+   * This method demonstrates how to use the joined table inheritance strategy
+   * to create entities that are stored in separate tables but share a common
+   * base class.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates instances of Fiction and NonFiction entities,
+  // which inherit common attributes from a base class Genre and are stored
+  // in separate tables using the joined table inheritance strategy.
+  // It sets specific attributes for each entity, persists them to the
+  // database, and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the use of joined table inheritance strategy in a JPA context.
+  // It is a basic example of how to use JPA to create and persist entities that
+  // share a common base class but are stored in separate tables in a
+  // relational database using Hibernate as the JPA provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void joinedTableStrategy(EntityManagerFactory emf) {
+    try (EntityManager em = emf.createEntityManager()) {
+      em.getTransaction().begin();
+
+      // Create instances of Fiction and NonFiction entities
+      Fiction fiction = new Fiction();
+      fiction.setCode("FIC");
+      fiction.setSetting("Dystopian Future");
+
+      NonFiction nonFiction = new NonFiction();
+      nonFiction.setCode("NFIC");
+      nonFiction.setTopic("Science");
+
+      // Persist the entities
+      em.persist(fiction);
+      em.persist(nonFiction);
+
+      em.getTransaction().commit();
+    }
+  }
+
+  /**
+   * This method demonstrates how to use the table-per-class inheritance strategy
+   * to create entities that are stored in separate tables for each subclass.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates instances of CardPayment and CashPayment entities,
+  // which inherit common attributes from a base class Payment and are stored
+  // in separate tables using the table-per-class inheritance strategy.
+  // It sets specific attributes for each entity, persists them to the
+  // database, and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the use of table-per-class inheritance strategy in a JPA context.
+  // It is a basic example of how to use JPA to create and persist entities that
+  // share a common base class but are stored in separate tables in a
+  // relational database using Hibernate as the JPA provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void tablePerClassStrategy(EntityManagerFactory emf) {
+    try (EntityManager em = emf.createEntityManager()) {
+      em.getTransaction().begin();
+
+      CardPayment cardPayment = new CardPayment();
+      cardPayment.setCardNumber("1234-5678-9012-3456");
+      cardPayment.setAmount(100.0);
+      em.persist(cardPayment);
+
+      CashPayment cashPayment = new CashPayment();
+      cashPayment.setCode("CASH123");
+      cashPayment.setAmount(50.0);
+      em.persist(cashPayment);
+
+      em.getTransaction().commit();
+    }
+  }
+
+  /**
+   * This method demonstrates how to create a composition relationship
+   * with an association between Category and Field entities.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates instances of Category and Field entities,
+  // establishes a many-to-many relationship between them, and persists
+  // the entities to the database.
+  // It sets the categories for each field and the fields for each category,
+  // ensuring that the relationship is bidirectional.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the creation of a composition relationship with an association in a JPA
+  // context.
+  // It is a basic example of how to use JPA to create and persist entities with
+  // a composition relationship in a relational database using Hibernate as the
+  // JPA provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void compositionWithAssociation(EntityManagerFactory emf) {
+    try (EntityManager em = emf.createEntityManager()) {
+      em.getTransaction().begin();
+
+      // Create a new Category instances
+      Category category1 = new Category();
+      category1.setName("Music");
+
+      Category category2 = new Category();
+      category2.setName("Art");
+
+      // Create a new Field instances and associate it with the category1
+      Field field1 = new Field();
+      field1.setName("History");
+
+      Field field2 = new Field();
+      field2.setName("New advences");
+
+      // Set the categories for each field
+      field1.setCategories(Set.of(category1, category2));
+      field2.setCategories(Set.of(category1, category2));
+
+      // Set the fields for each category
+      category1.setFields(Set.of(field1, field2));
+      category2.setFields(Set.of(field1, field2));
+
+      // Persist the entities
+      em.persist(field1);
+      em.persist(field2);
+
+      em.getTransaction().commit();
+    }
+  }
+
+  /**
+   * This method demonstrates how to create a composition relationship
+   * with an embeddable Address entity in the Author entity.
+   *
+   * @param emf The EntityManagerFactory used to create EntityManager instances.
+   */
+  // This method creates an Author entity with an embedded Address entity,
+  // sets the address for the author, persists the author to the database,
+  // and commits the transaction.
+  // The method uses the EntityManager to manage the persistence context and
+  // ensure that the entities are saved to the database.
+  // The method is designed to be called from the main method to demonstrate
+  // the creation of a composition relationship with an embeddable entity in a JPA
+  // context.
+  // It is a basic example of how to use JPA to create and persist entities with
+  // a composition relationship using an embeddable entity in a relational database
+  // using Hibernate as the JPA provider.
+  // The method is annotated with @SuppressWarnings("unused") to indicate that it
+  // is intentionally not used in the current context, but it can be uncommented
+  // in the main method to execute it and see the results.
+  @SuppressWarnings("unused")
+  private static void compositionWithEmbedable(EntityManagerFactory emf) {
+    try (EntityManager em = emf.createEntityManager()) {
+      em.getTransaction().begin();
+
+      // Create an Author entity with an embedded Address entity
+      Author author = new Author();
+      author.setName("William Shakespeare");
+
+      // Create an Address entity and set its properties
+      // The Address entity is marked as @Embeddable, allowing it to be embedded
+      // within the Author entity.
+      // This allows the Address entity to be treated as part of the Author entity,
+      // and its fields will be stored in the same table as the Author entity.
+      // The Address entity does not have its own identity and is typically used
+      // to encapsulate address-related fields within an entity.
+      // The Address entity is created and its properties are set.
+      Address address = new Address();
+      address.setStreet("Stratford-upon-Avon");
+      address.setCity("Warwickshire");
+      address.setPostalCode("CV37 6QW");
+
+      // Set the address for the author
+      // The Author entity has an Address field that is marked with @Embedded,
+      // indicating that it contains an embedded Address entity.
+      // This allows the Address entity to be stored as part of the Author entity
+      // in the same table, and its fields will be mapped to columns in the Author
+      // table.
+      // The address is set for the author, establishing the composition relationship
+      // between the Author and Address entities.
+      // The Address entity is embedded within the Author entity, allowing it to be
+      // treated as part of the Author entity and its fields to be stored in the same
+      // table as the Author entity.
+      // The Address entity does not have its own identity and is typically used to
+      // encapsulate address-related fields within an entity.
+      // The Address entity is created and its properties are set.
+      // The Address entity is embedded within the Author entity, allowing it to be
+      // treated as part of the Author entity and its fields to be stored in the same
+      // table as the Author entity.
+      author.setAddress(address);
+
+      // Persist the author entity
+      // The Author entity is persisted to the database, which means that it will be
+      // saved to the database and its state will be managed by the EntityManager.
+      // The EntityManager is responsible for managing the persistence context and
+      // ensuring that the entities are saved to the database.
+      em.persist(author);
+
+      em.getTransaction().commit();
     }
   }
 }
